@@ -90,7 +90,7 @@ public class StudentRepository {
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("✅ Student updated successfully.");
+                System.out.println("Student updated successfully.");
             } else {
                 System.out.println("Student not found.");
             }
