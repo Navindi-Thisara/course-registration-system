@@ -56,4 +56,10 @@ public class Enrollment {
     public void setGrade(String grade) {
         this.grade = grade;
     }
+
+    @Override
+    public String toString() {
+        return "Enrollment{" + "enrollmentId=" + enrollmentId + ", studentId=" + studentId + ", courseId=" + courseId + ", semester='" + semester + '\'' + ", grade='" + grade + '\'' + '}';
+    }
+
 }
