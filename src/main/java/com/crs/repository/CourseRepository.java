@@ -4,13 +4,13 @@ import com.crs.model.Course;
 import com.crs.util.DBConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseRepository {
 
-    public void addCourse(Course course) {
+    public boolean addCourse(Course course) {
         String sql = "INSERT INTO courses (title, credit_hours, department, capacity) VALUES (?, ?, ?, ?)";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -21,13 +21,16 @@ public class CourseRepository {
 
             stmt.executeUpdate();
             System.out.println("Course added successfully.");
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
     public List<Course> getAllCourses() {
+        List<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM courses";
 
         try (Connection conn = DBConnection.getConnection();
@@ -35,17 +38,21 @@ public class CourseRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                System.out.println(rs.getInt("course_id") + " | " +
-                        rs.getString("title") + " | " +
-                        rs.getString("department") + " | " +
-                        rs.getInt("credit_hours") + " | " +
-                        rs.getInt("capacity"));
+                Course course = new Course(
+                        rs.getInt("course_id"),
+                        rs.getString("title"),
+                        rs.getInt("credit_hours"),
+                        rs.getString("department"),
+                        rs.getInt("capacity")
+                );
+                courses.add(course);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return courses;
     }
 
     public Course getCourseById(int courseId) {
@@ -65,13 +72,15 @@ public class CourseRepository {
                     );
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
-    public void updateCourse(Course course) {
+    public boolean updateCourse(Course course) {
         String sql = "UPDATE courses SET title = ?, credit_hours = ?, department = ?, capacity = ? WHERE course_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -85,6 +94,7 @@ public class CourseRepository {
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Course updated successfully.");
+                return true;
             } else {
                 System.out.println("Course not found.");
             }
@@ -92,9 +102,10 @@ public class CourseRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public void deleteCourse(int courseId) {
+    public boolean deleteCourse(int courseId) {
         String sql = "DELETE FROM courses WHERE course_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -104,6 +115,7 @@ public class CourseRepository {
             int rowsDeleted = stmt.executeUpdate();
             if (rowsDeleted > 0) {
                 System.out.println("Course deleted successfully.");
+                return true;
             } else {
                 System.out.println("Course not found.");
             }
@@ -111,5 +123,6 @@ public class CourseRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 }
