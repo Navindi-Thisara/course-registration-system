@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
-
-</AnchorPane>
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.crs.controller.EnrollmentController">
+    <Label text="Enroll a Student" style="-fx-font-size: 16px;" />
+    <TextField fx:id="studentIdField" promptText="Student ID" />
+    <TextField fx:id="courseIdField" promptText="Course ID" />
+    <Button text="Enroll" onAction="#enrollStudent"/>
+</VBox>
