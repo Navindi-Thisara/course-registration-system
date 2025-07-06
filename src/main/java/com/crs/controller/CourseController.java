@@ -30,68 +30,52 @@ public class CourseController {
 
     public void listCourses() {
         List<Course> courses = courseService.getAllCourses();
-        if (courses.isEmpty()) {
-            System.out.println("No courses available.");
+        if (courses == null || courses.isEmpty()) {
+            System.out.println("No courses found.");
             return;
         }
-        System.out.println("Course ID | Title | Department | Credit Hours | Capacity");
         for (Course c : courses) {
-            System.out.println(c.getCourseId() + " | " +
-                    c.getTitle() + " | " +
-                    c.getDepartment() + " | " +
-                    c.getCreditHours() + " | " +
-                    c.getCapacity());
+            System.out.println(c.getCourseId() + " | " + c.getTitle() + " | " + c.getDepartment() + " | " + c.getCreditHours() + " | " + c.getCapacity());
         }
     }
 
     public void updateCourse() {
-        System.out.print("Enter Course ID to update: ");
-        int courseId = Integer.parseInt(scanner.nextLine());
-        Course course = courseService.getCourseById(courseId);
+        System.out.print("Enter Course ID to Update: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        Course course = courseService.getCourseById(id);
         if (course == null) {
             System.out.println("Course not found.");
             return;
         }
 
-        System.out.print("Enter new Course Title (" + course.getTitle() + "): ");
+        System.out.print("New Title [" + course.getTitle() + "]: ");
         String title = scanner.nextLine();
-        if (!title.isBlank()) {
-            course.setTitle(title);
-        }
-
-        System.out.print("Enter new Credit Hours (" + course.getCreditHours() + "): ");
-        String creditsStr = scanner.nextLine();
-        if (!creditsStr.isBlank()) {
-            course.setCreditHours(Integer.parseInt(creditsStr));
-        }
-
-        System.out.print("Enter new Department (" + course.getDepartment() + "): ");
+        System.out.print("New Credit Hours [" + course.getCreditHours() + "]: ");
+        int credits = Integer.parseInt(scanner.nextLine());
+        System.out.print("New Department [" + course.getDepartment() + "]: ");
         String dept = scanner.nextLine();
-        if (!dept.isBlank()) {
-            course.setDepartment(dept);
-        }
+        System.out.print("New Capacity [" + course.getCapacity() + "]: ");
+        int capacity = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Enter new Capacity (" + course.getCapacity() + "): ");
-        String capacityStr = scanner.nextLine();
-        if (!capacityStr.isBlank()) {
-            course.setCapacity(Integer.parseInt(capacityStr));
-        }
+        course.setTitle(title);
+        course.setCreditHours(credits);
+        course.setDepartment(dept);
+        course.setCapacity(capacity);
 
         if (courseService.updateCourse(course)) {
             System.out.println("Course updated successfully.");
         } else {
-            System.out.println("Failed to update course.");
+            System.out.println("Update failed.");
         }
     }
 
     public void deleteCourse() {
-        System.out.print("Enter Course ID to delete: ");
-        int courseId = Integer.parseInt(scanner.nextLine());
-
-        if (courseService.deleteCourse(courseId)) {
+        System.out.print("Enter Course ID to Delete: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        if (courseService.deleteCourse(id)) {
             System.out.println("Course deleted successfully.");
         } else {
-            System.out.println("Course not found or failed to delete.");
+            System.out.println("Delete failed.");
         }
     }
 }
