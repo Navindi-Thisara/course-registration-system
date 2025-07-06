@@ -4,6 +4,7 @@ import com.crs.model.Course;
 import com.crs.util.DBConnection;
 
 import java.sql.*;
+import java.util.List;
 
 public class CourseRepository {
 
@@ -26,7 +27,7 @@ public class CourseRepository {
         }
     }
 
-    public void getAllCourses() {
+    public List<Course> getAllCourses() {
         String sql = "SELECT * FROM courses";
 
         try (Connection conn = DBConnection.getConnection();
@@ -44,6 +45,7 @@ public class CourseRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public Course getCourseById(int courseId) {
