@@ -6,6 +6,7 @@ public class Enrollment {
     private int courseId;
     private String semester;
     private String grade;
+    private String enrollmentDate;
 
     public Enrollment() {}
 
@@ -15,6 +16,12 @@ public class Enrollment {
         this.courseId = courseId;
         this.semester = semester;
         this.grade = grade;
+    }
+
+    public Enrollment(int enrollmentId, int studentId, int courseId) {
+        this.enrollmentId = enrollmentId;
+        this.studentId = studentId;
+        this.courseId = courseId;
     }
 
     public int getEnrollmentId() {
@@ -57,9 +64,23 @@ public class Enrollment {
         this.grade = grade;
     }
 
-    @Override
-    public String toString() {
-        return "Enrollment{" + "enrollmentId=" + enrollmentId + ", studentId=" + studentId + ", courseId=" + courseId + ", semester='" + semester + '\'' + ", grade='" + grade + '\'' + '}';
+    public String getEnrollmentDate() {
+        return enrollmentDate;
     }
 
+    public void setEnrollmentDate(String enrollmentDate) {
+        this.enrollmentDate = enrollmentDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Enrollment{" +
+                "enrollmentId=" + enrollmentId +
+                ", studentId=" + studentId +
+                ", courseId=" + courseId +
+                ", semester='" + semester + '\'' +
+                ", grade='" + grade + '\'' +
+                ", enrollmentDate='" + enrollmentDate + '\'' +
+                '}';
+    }
 }
