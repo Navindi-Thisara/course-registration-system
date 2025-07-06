@@ -6,43 +6,26 @@ import com.crs.repository.CourseRepository;
 import java.util.List;
 
 public class CourseService {
-    private final CourseRepository courseRepo = new CourseRepository();
+
+    private final CourseRepository courseRepository = new CourseRepository();
 
     public boolean addCourse(Course course) {
-        try {
-            courseRepo.addCourse(course);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return courseRepository.addCourse(course);
     }
 
     public List<Course> getAllCourses() {
-        return courseRepo.getAllCourses();
+        return courseRepository.getAllCourses();
     }
 
     public Course getCourseById(int courseId) {
-        return courseRepo.getCourseById(courseId);
+        return courseRepository.getCourseById(courseId);
     }
 
     public boolean updateCourse(Course course) {
-        try {
-            courseRepo.updateCourse(course);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return courseRepository.updateCourse(course);
     }
 
     public boolean deleteCourse(int courseId) {
-        try {
-            courseRepo.deleteCourse(courseId);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return courseRepository.deleteCourse(courseId);
     }
 }
