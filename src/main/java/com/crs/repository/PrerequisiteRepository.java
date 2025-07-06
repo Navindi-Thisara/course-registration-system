@@ -10,14 +10,14 @@ import java.sql.SQLException;
 public class PrerequisiteRepository {
 
     public boolean hasCompletedPrerequisites(int studentId, int courseId) {
-        String sql = "SELECT prerequisite_id FROM prerequisites WHERE course_id = ?";
+        String sql = "SELECT prerequisite_course_id FROM prerequisites WHERE course_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, courseId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int prerequisiteId = rs.getInt("prerequisite_id");
+                    int prerequisiteId = rs.getInt("prerequisite_course_id");
                     if (!hasCompletedCourse(studentId, prerequisiteId)) {
                         return false; // Prerequisite not completed
                     }
