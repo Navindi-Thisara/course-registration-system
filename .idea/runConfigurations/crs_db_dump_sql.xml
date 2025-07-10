@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="crs_db_dump.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+    <script-file value="$PROJECT_DIR$/database/crs_db_dump.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="316ec5de-3197-4845-b696-58ac0cc4f8e4" />
+    <method v="2" />
+  </configuration>
+</component>
