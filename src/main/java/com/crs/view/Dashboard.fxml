@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.crs.controller.DashboardController" spacing="15" alignment="CENTER"
+      prefWidth="400" prefHeight="300" style="-fx-padding: 30;">
+
+    <Label text="Dashboard" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+    <Button text="Manage Students" onAction="#onManageStudentsClick" maxWidth="200"/>
+    <Button text="Manage Courses" onAction="#onManageCoursesClick" maxWidth="200"/>
+    <Button text="Manage Enrollments" onAction="#onManageEnrollmentsClick" maxWidth="200"/>
+    <Button text="View Reports" onAction="#onViewReportsClick" maxWidth="200"/>
+    <Button text="Logout" onAction="#onLogoutClick" maxWidth="200" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+</VBox>

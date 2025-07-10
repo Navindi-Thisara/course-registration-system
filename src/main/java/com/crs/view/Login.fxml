@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.crs.controller.LoginController" spacing="10" alignment="CENTER"
+      prefWidth="300" prefHeight="200" style="-fx-padding: 20;">
+
+    <Label text="Course Registration System" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <TextField fx:id="usernameField" promptText="Username" />
+    <PasswordField fx:id="passwordField" promptText="Password" />
+    <Button text="Login" onAction="#onLoginButtonClick" maxWidth="Infinity"/>
+</VBox>

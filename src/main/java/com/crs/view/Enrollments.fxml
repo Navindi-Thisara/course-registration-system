@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.crs.controller.EnrollmentController" spacing="10" alignment="CENTER"
+      prefWidth="350" prefHeight="250" style="-fx-padding: 20;">
+
+    <Label text="Enroll Student" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="studentIdField" promptText="Student ID" />
+    <TextField fx:id="courseIdField" promptText="Course ID" />
+
+    <Button text="Enroll" onAction="#onEnrollButtonClick" maxWidth="150"/>
+</VBox>

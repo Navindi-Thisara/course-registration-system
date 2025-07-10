@@ -1,6 +1,5 @@
 package com.crs;
 
-import com.crs.controller.SceneLoader;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
