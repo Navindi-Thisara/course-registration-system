@@ -11,8 +11,9 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/crs/view/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
             Parent root = loader.load();
+
             primaryStage.setTitle("Course Registration System - Login");
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
