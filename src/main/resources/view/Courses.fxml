@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.crs.controller.CourseController">
+<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.crs.controller.CourseController">
+
     <center>
         <TableView fx:id="courseTable" prefHeight="300" prefWidth="600">
             <columns>
-                <TableColumn text="ID" />
-                <TableColumn text="Title" />
-                <TableColumn text="Department" />
+                <TableColumn fx:id="idCol" text="ID" prefWidth="100"/>
+                <TableColumn fx:id="titleCol" text="Title" prefWidth="250"/>
+                <TableColumn fx:id="deptCol" text="Department" prefWidth="250"/>
             </columns>
         </TableView>
     </center>
+
     <bottom>
-        <HBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER" padding="10">
             <Button text="Add" onAction="#addCourse"/>
             <Button text="Update" onAction="#updateCourse"/>
             <Button text="Delete" onAction="#deleteCourse"/>
         </HBox>
     </bottom>
+
 </BorderPane>

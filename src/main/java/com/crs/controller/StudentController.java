@@ -2,165 +2,123 @@ package com.crs.controller;
 
 import com.crs.model.Student;
 import com.crs.service.StudentService;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.util.Optional;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class StudentController {
 
     @FXML private TableView<Student> studentTable;
-    @FXML private TableColumn<Student, Integer> idColumn;
-    @FXML private TableColumn<Student, String> nameColumn;
-    @FXML private TableColumn<Student, String> dobColumn;
-    @FXML private TableColumn<Student, String> programColumn;
-    @FXML private TableColumn<Student, Integer> yearColumn;
-    @FXML private TableColumn<Student, String> contactColumn;
-    @FXML private TableColumn<Student, Integer> userIdColumn;
+    @FXML private TableColumn<Student, String> colId;
+    @FXML private TableColumn<Student, String> colName;
+    @FXML private TableColumn<Student, String> colProgram;
 
-    @FXML private TextField nameField;
-    @FXML private TextField dobField;
-    @FXML private TextField programField;
-    @FXML private TextField yearField;
-    @FXML private TextField contactField;
-    @FXML private TextField userIdField;
+    @FXML private TextField txtId;
+    @FXML private TextField txtName;
+    @FXML private TextField txtProgram;
+
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
 
     private final StudentService studentService = new StudentService();
-    private final ObservableList<Student> studentData = FXCollections.observableArrayList();
 
     @FXML
-    public void initialize() {
+    private void initialize() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colProgram.setCellValueFactory(new PropertyValueFactory<>("program"));
 
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStudentId()).asObject());
-        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        dobColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDob()));
-        programColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProgram()));
-        yearColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getYear()).asObject());
-        contactColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getContactInfo()));
-        userIdColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getUserId()).asObject());
+        loadStudents();
 
-        refreshTable();
-
-        studentTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> populateFields(newValue));
-    }
-
-    private void populateFields(Student student) {
-        if (student != null) {
-            nameField.setText(student.getName());
-            dobField.setText(student.getDob());
-            programField.setText(student.getProgram());
-            yearField.setText(String.valueOf(student.getYear()));
-            contactField.setText(student.getContactInfo());
-            userIdField.setText(String.valueOf(student.getUserId()));
-        } else {
-            clearFields();
-        }
-    }
-
-    @FXML
-    public void addStudent() {
-        try {
-            Student student = new Student(
-                    0,
-                    nameField.getText(),
-                    dobField.getText(),
-                    programField.getText(),
-                    Integer.parseInt(yearField.getText()),
-                    contactField.getText(),
-                    Integer.parseInt(userIdField.getText())
-            );
-
-            if (studentService.addStudent(student)) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Student added successfully.");
-                refreshTable();
-                clearFields();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add student.");
+        studentTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                txtId.setText(newSel.getStudentId());
+                txtName.setText(newSel.getName());
+                txtProgram.setText(newSel.getProgram());
+                txtId.setDisable(true);  // disable editing ID on update
             }
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Year and User ID must be valid numbers.");
-        }
+        });
+    }
+
+    private void loadStudents() {
+        ObservableList<Student> list = FXCollections.observableArrayList(studentService.getAllStudents());
+        studentTable.setItems(list);
     }
 
     @FXML
-    public void updateStudent() {
-        Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
-        if (selectedStudent == null) {
-            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a student to update.");
-            return;
-        }
-        try {
-            selectedStudent.setName(nameField.getText());
-            selectedStudent.setDob(dobField.getText());
-            selectedStudent.setProgram(programField.getText());
-            selectedStudent.setYear(Integer.parseInt(yearField.getText()));
-            selectedStudent.setContactInfo(contactField.getText());
-            selectedStudent.setUserId(Integer.parseInt(userIdField.getText()));
+    private void addStudent() {
+        String id = txtId.getText().trim();
+        String name = txtName.getText().trim();
+        String program = txtProgram.getText().trim();
 
-            if (studentService.updateStudent(selectedStudent)) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Student updated successfully.");
-                refreshTable();
-                clearFields();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update student.");
-            }
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Year and User ID must be valid numbers.");
-        }
-    }
-
-    @FXML
-    public void deleteStudent() {
-        Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
-        if (selectedStudent == null) {
-            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a student to delete.");
+        if (id.isEmpty() || name.isEmpty() || program.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Please fill all fields.");
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Deletion");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Are you sure you want to delete student: " + selectedStudent.getName() + "?");
-
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (studentService.deleteStudent(selectedStudent.getStudentId())) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Student deleted successfully.");
-                refreshTable();
-                clearFields();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete student.");
-            }
+        if (studentService.getStudentById(id) != null) {
+            showAlert(Alert.AlertType.ERROR, "Student ID already exists.");
+            return;
         }
+
+        Student student = new Student(id, name, program);
+        studentService.addStudent(student);
+        loadStudents();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Student added successfully.");
     }
 
-    private void refreshTable() {
-        studentData.setAll(studentService.getAllStudents());
-        studentTable.setItems(studentData);
+    @FXML
+    private void updateStudent() {
+        String id = txtId.getText().trim();
+        if (id.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Select a student to update.");
+            return;
+        }
+
+        Student existing = studentService.getStudentById(id);
+        if (existing == null) {
+            showAlert(Alert.AlertType.ERROR, "Student not found.");
+            return;
+        }
+
+        existing.setName(txtName.getText().trim());
+        existing.setProgram(txtProgram.getText().trim());
+        studentService.updateStudent(existing);
+        loadStudents();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Student updated successfully.");
+    }
+
+    @FXML
+    private void deleteStudent() {
+        Student selected = studentTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Select a student to delete.");
+            return;
+        }
+
+        studentService.deleteStudent(selected.getStudentId());
+        loadStudents();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Student deleted successfully.");
     }
 
     private void clearFields() {
-        nameField.clear();
-        dobField.clear();
-        programField.clear();
-        yearField.clear();
-        contactField.clear();
-        userIdField.clear();
+        txtId.clear();
+        txtName.clear();
+        txtProgram.clear();
+        txtId.setDisable(false);
+        studentTable.getSelectionModel().clearSelection();
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
+    private void showAlert(Alert.AlertType type, String msg) {
+        Alert alert = new Alert(type);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(msg);
         alert.showAndWait();
-    }
-
-    public void listStudents() {
-
     }
 }

@@ -2,80 +2,137 @@ package com.crs.controller;
 
 import com.crs.model.Course;
 import com.crs.service.CourseService;
-
-import java.util.List;
-import java.util.Scanner;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class CourseController {
+
+    @FXML private TableView<Course> courseTable;
+    @FXML private TableColumn<Course, String> colCourseId;
+    @FXML private TableColumn<Course, String> colTitle;
+    @FXML private TableColumn<Course, Integer> colCredits;
+
+    @FXML private TextField txtCourseId;
+    @FXML private TextField txtTitle;
+    @FXML private TextField txtCredits;
+
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+
     private final CourseService courseService = new CourseService();
-    private final Scanner scanner = new Scanner(System.in);
 
-    public void addCourse() {
-        System.out.print("Enter Course Title: ");
-        String title = scanner.nextLine();
-        System.out.print("Enter Credit Hours: ");
-        int credits = Integer.parseInt(scanner.nextLine());
-        System.out.print("Enter Department: ");
-        String dept = scanner.nextLine();
-        System.out.print("Enter Capacity: ");
-        int capacity = Integer.parseInt(scanner.nextLine());
+    @FXML
+    private void initialize() {
+        colCourseId.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colCredits.setCellValueFactory(new PropertyValueFactory<>("creditHours"));
 
-        Course course = new Course(0, title, credits, dept, capacity);
-        if (courseService.addCourse(course)) {
-            System.out.println("Course added successfully.");
-        } else {
-            System.out.println("Failed to add course.");
-        }
+        loadCourses();
+
+        courseTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                txtCourseId.setText(newSel.getCourseId());
+                txtTitle.setText(newSel.getTitle());
+                txtCredits.setText(String.valueOf(newSel.getCreditHours()));
+                txtCourseId.setDisable(true);
+            }
+        });
     }
 
-    public void listCourses() {
-        List<Course> courses = courseService.getAllCourses();
-        if (courses == null || courses.isEmpty()) {
-            System.out.println("No courses found.");
-            return;
-        }
-        for (Course c : courses) {
-            System.out.println(c.getCourseId() + " | " + c.getTitle() + " | " + c.getDepartment() + " | " + c.getCreditHours() + " | " + c.getCapacity());
-        }
+    private void loadCourses() {
+        ObservableList<Course> list = FXCollections.observableArrayList(courseService.getAllCourses());
+        courseTable.setItems(list);
     }
 
-    public void updateCourse() {
-        System.out.print("Enter Course ID to Update: ");
-        int id = Integer.parseInt(scanner.nextLine());
-        Course course = courseService.getCourseById(id);
-        if (course == null) {
-            System.out.println("Course not found.");
+    @FXML
+    private void addCourse() {
+        String id = txtCourseId.getText().trim();
+        String title = txtTitle.getText().trim();
+        String creditsStr = txtCredits.getText().trim();
+
+        if (id.isEmpty() || title.isEmpty() || creditsStr.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Please fill all fields.");
             return;
         }
 
-        System.out.print("New Title [" + course.getTitle() + "]: ");
-        String title = scanner.nextLine();
-        System.out.print("New Credit Hours [" + course.getCreditHours() + "]: ");
-        int credits = Integer.parseInt(scanner.nextLine());
-        System.out.print("New Department [" + course.getDepartment() + "]: ");
-        String dept = scanner.nextLine();
-        System.out.print("New Capacity [" + course.getCapacity() + "]: ");
-        int capacity = Integer.parseInt(scanner.nextLine());
-
-        course.setTitle(title);
-        course.setCreditHours(credits);
-        course.setDepartment(dept);
-        course.setCapacity(capacity);
-
-        if (courseService.updateCourse(course)) {
-            System.out.println("Course updated successfully.");
-        } else {
-            System.out.println("Update failed.");
+        int credits;
+        try {
+            credits = Integer.parseInt(creditsStr);
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Credits must be a number.");
+            return;
         }
+
+        if (courseService.getCourseById(id) != null) {
+            showAlert(Alert.AlertType.ERROR, "Course ID already exists.");
+            return;
+        }
+
+        Course course = new Course(id, title, credits);
+        courseService.addCourse(course);
+        loadCourses();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Course added successfully.");
     }
 
-    public void deleteCourse() {
-        System.out.print("Enter Course ID to Delete: ");
-        int id = Integer.parseInt(scanner.nextLine());
-        if (courseService.deleteCourse(id)) {
-            System.out.println("Course deleted successfully.");
-        } else {
-            System.out.println("Delete failed.");
+    @FXML
+    private void updateCourse() {
+        String id = txtCourseId.getText().trim();
+        if (id.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Select a course to update.");
+            return;
         }
+
+        Course existing = courseService.getCourseById(id);
+        if (existing == null) {
+            showAlert(Alert.AlertType.ERROR, "Course not found.");
+            return;
+        }
+
+        existing.setTitle(txtTitle.getText().trim());
+        try {
+            existing.setCreditHours(Integer.parseInt(txtCredits.getText().trim()));
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Credits must be a number.");
+            return;
+        }
+
+        courseService.updateCourse(existing);
+        loadCourses();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Course updated successfully.");
+    }
+
+    @FXML
+    private void deleteCourse() {
+        Course selected = courseTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Select a course to delete.");
+            return;
+        }
+
+        courseService.deleteCourse(selected.getCourseId());
+        loadCourses();
+        clearFields();
+        showAlert(Alert.AlertType.INFORMATION, "Course deleted successfully.");
+    }
+
+    private void clearFields() {
+        txtCourseId.clear();
+        txtTitle.clear();
+        txtCredits.clear();
+        txtCourseId.setDisable(false);
+        courseTable.getSelectionModel().clearSelection();
+    }
+
+    private void showAlert(Alert.AlertType type, String msg) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 }

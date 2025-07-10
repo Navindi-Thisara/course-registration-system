@@ -1,14 +1,19 @@
 package com.crs.controller;
 
 import com.crs.model.User;
-import com.crs.service.AuthenticationService;
+import com.crs.service.AuthService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class LoginController {
 
@@ -16,33 +21,33 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
 
-    private final AuthenticationService authService = new AuthenticationService();
+    private final AuthService authService = new AuthService();
 
     @FXML
     private void handleLogin(ActionEvent event) {
-        String username = usernameField.getText();
+        String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
         User user = authService.login(username, password);
-        if (user != null) {
-            switch (user.getRole()) {
-                case "Admin" -> loadScene("/view/AdminDashboard.fxml");
-                case "Faculty" -> loadScene("/view/FacultyDashboard.fxml");
-                case "Student" -> loadScene("/view/StudentDashboard.fxml");
-                default -> errorLabel.setText("Unknown role.");
-            }
-        } else {
-            errorLabel.setText("Invalid credentials.");
-        }
-    }
 
-    private void loadScene(String fxml) {
+        if (user == null) {
+            errorLabel.setText("Invalid username or password.");
+            return;
+        }
+
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxml));
-            Stage stage = (Stage) usernameField.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/crs/view/Dashboard.fxml"));
+            Parent root = loader.load();
+
+            DashboardController controller = loader.getController();
+            controller.setUser(user);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
-        } catch (Exception e) {
+            stage.setTitle("Dashboard - " + user.getRole());
+        } catch (IOException e) {
             e.printStackTrace();
+            errorLabel.setText("Error loading dashboard.");
         }
     }
 }
