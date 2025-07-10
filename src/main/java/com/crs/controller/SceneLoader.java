@@ -19,4 +19,15 @@ public class SceneLoader {
             e.printStackTrace();
         }
     }
+
+    public static void loadScene(Stage stage, String fxmlPath, String title) {
+        try {
+            Parent root = FXMLLoader.load(SceneLoader.class.getResource(fxmlPath));
+            stage.setTitle(title);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

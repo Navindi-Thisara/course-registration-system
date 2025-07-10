@@ -62,7 +62,7 @@ public class StudentController {
     }
 
     @FXML
-    private void addStudent() {
+    public void addStudent() {
         try {
             Student student = new Student(
                     0,
@@ -87,7 +87,7 @@ public class StudentController {
     }
 
     @FXML
-    private void updateStudent() {
+    public void updateStudent() {
         Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
         if (selectedStudent == null) {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a student to update.");
@@ -114,7 +114,7 @@ public class StudentController {
     }
 
     @FXML
-    private void deleteStudent() {
+    public void deleteStudent() {
         Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
         if (selectedStudent == null) {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a student to delete.");
@@ -158,5 +158,9 @@ public class StudentController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void listStudents() {
+
     }
 }
