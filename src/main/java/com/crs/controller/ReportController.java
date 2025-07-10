@@ -13,7 +13,12 @@ public class ReportController {
 
     @FXML
     public void initialize() {
-        String report = reportService.generateCourseEnrollmentReport();
-        reportTextArea.setText(report);
+        try {
+            String report = reportService.generateCourseEnrollmentReport();
+            reportTextArea.setText(report);
+        } catch (Exception e) {
+            reportTextArea.setText("Failed to load report: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

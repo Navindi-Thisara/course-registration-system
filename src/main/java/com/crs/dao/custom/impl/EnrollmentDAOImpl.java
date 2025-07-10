@@ -18,13 +18,13 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Enrollment e = new Enrollment();
-                e.setEnrollmentId(rs.getInt("enrollment_id"));
-                e.setStudentId(rs.getInt("student_id"));
-                e.setCourseId(rs.getInt("course_id"));
-                e.setSemester(rs.getString("semester"));
-                e.setGrade(rs.getString("grade"));
-                enrollments.add(e);
+                Enrollment enrollment = new Enrollment();
+                enrollment.setEnrollmentId(rs.getInt("enrollment_id"));
+                enrollment.setStudentId(rs.getInt("student_id"));
+                enrollment.setCourseId(rs.getInt("course_id"));
+                enrollment.setSemester(rs.getString("semester"));
+                enrollment.setGrade(rs.getString("grade"));
+                enrollments.add(enrollment);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,14 +39,15 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                enrollment = new Enrollment();
-                enrollment.setEnrollmentId(rs.getInt("enrollment_id"));
-                enrollment.setStudentId(rs.getInt("student_id"));
-                enrollment.setCourseId(rs.getInt("course_id"));
-                enrollment.setSemester(rs.getString("semester"));
-                enrollment.setGrade(rs.getString("grade"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    enrollment = new Enrollment();
+                    enrollment.setEnrollmentId(rs.getInt("enrollment_id"));
+                    enrollment.setStudentId(rs.getInt("student_id"));
+                    enrollment.setCourseId(rs.getInt("course_id"));
+                    enrollment.setSemester(rs.getString("semester"));
+                    enrollment.setGrade(rs.getString("grade"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.crs.controller;
 
 import com.crs.entity.Course;
 import com.crs.service.custom.CourseService;
+import com.crs.service.custom.impl.CourseServiceImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
@@ -12,7 +13,7 @@ public class CourseController {
     @FXML
     private ListView<String> courseListView;
 
-    private final CourseService courseService = new CourseService();
+    private final CourseService courseService = new CourseServiceImpl();
 
     @FXML
     public void initialize() {

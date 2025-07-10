@@ -3,6 +3,7 @@ package com.crs.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,30 +14,30 @@ public class DashboardController {
 
     @FXML
     protected void onManageStudentsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/students.fxml", "Manage Students");
+        loadScene("/com/crs/view/students.fxml", "Manage Students", event);
     }
 
     @FXML
     protected void onManageCoursesClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/courses.fxml", "Manage Courses");
+        loadScene("/com/crs/view/courses.fxml", "Manage Courses", event);
     }
 
     @FXML
     protected void onManageEnrollmentsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/enrollments.fxml", "Manage Enrollments");
+        loadScene("/com/crs/view/enrollments.fxml", "Manage Enrollments", event);
     }
 
     @FXML
     protected void onViewReportsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/reports.fxml", "Reports");
+        loadScene("/com/crs/view/reports.fxml", "Reports", event);
     }
 
     @FXML
     protected void onLogoutClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/login.fxml", "Login");
+        loadScene("/com/crs/view/login.fxml", "Login", event);
     }
 
-    private void loadScene(String fxmlPath, String title) throws IOException {
+    private void loadScene(String fxmlPath, String title, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
         Stage stage = new Stage();
@@ -44,8 +45,7 @@ public class DashboardController {
         stage.setScene(new Scene(root));
         stage.show();
 
-        // Close current window
-        Stage currentStage = (Stage) loader.getRoot().getScene().getWindow();
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
     }
 }

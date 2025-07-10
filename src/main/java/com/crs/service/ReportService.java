@@ -1,17 +1,12 @@
 package com.crs.service;
 
 import com.crs.db.DBConnection;
-import com.crs.entity.Student;
-import com.crs.entity.Course;
-import com.crs.entity.Enrollment;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ReportService {
 
-    public void generateCourseEnrollmentReport() {
+    public String generateCourseEnrollmentReport() {
         String sql = "SELECT c.course_id, c.title, c.capacity, COUNT(e.course_id) AS enrolled " +
                 "FROM courses c LEFT JOIN enrollments e ON c.course_id = e.course_id " +
                 "GROUP BY c.course_id, c.title, c.capacity";
@@ -32,6 +27,7 @@ public class ReportService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return sql;
     }
 
     public void generateStudentSchedule(int studentId) {
