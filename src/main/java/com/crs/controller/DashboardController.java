@@ -14,27 +14,27 @@ public class DashboardController {
 
     @FXML
     protected void onManageStudentsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/students.fxml", "Manage Students", event);
+        loadScene("/view/students.fxml", "Manage Students", event);
     }
 
     @FXML
     protected void onManageCoursesClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/courses.fxml", "Manage Courses", event);
+        loadScene("/view/courses.fxml", "Manage Courses", event);
     }
 
     @FXML
     protected void onManageEnrollmentsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/enrollments.fxml", "Manage Enrollments", event);
+        loadScene("/view/enrollments.fxml", "Manage Enrollments", event);
     }
 
     @FXML
     protected void onViewReportsClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/reports.fxml", "Reports", event);
+        loadScene("/view/reports.fxml", "Reports", event);
     }
 
     @FXML
     protected void onLogoutClick(ActionEvent event) throws IOException {
-        loadScene("/com/crs/view/login.fxml", "Login", event);
+        loadScene("/view/login.fxml", "Login", event);
     }
 
     private void loadScene(String fxmlPath, String title, ActionEvent event) throws IOException {

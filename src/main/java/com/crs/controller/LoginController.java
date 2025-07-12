@@ -38,10 +38,10 @@ public class LoginController {
 
             try {
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/crs/view/Dashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
                 Parent root = loader.load();
 
-                Stage stage = (Stage) usernameField.getScene().getWindow(); // current stage
+                Stage stage = (Stage) usernameField.getScene().getWindow();
                 stage.setTitle("Dashboard - " + user.getRole());
                 stage.setScene(new Scene(root));
                 stage.show();
